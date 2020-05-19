@@ -1,14 +1,17 @@
 {
-  "name": "three-test",
+  "name": "three-fiber-cloth",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "drei": "0.0.32",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "react-three-fiber": "^4.2.3",
+    "three": "^0.116.1"
   },
   "scripts": {
     "start": "react-scripts start",

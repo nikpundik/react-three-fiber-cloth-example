@@ -1,25 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Suspense } from 'react';
+import { Canvas } from 'react-three-fiber';
+import { Stats, OrbitControls } from 'drei';
+
+import Loader from './components/Loader';
+import Flag from './components/Flag';
+
+const flags = [];
+
+const w = 5;
+const h = 5;
+const dx = 300;
+const dy = 300;
+const r = () => Math.random() * 30 - 60;
+for (let y = 0; y < h; y += 1) {
+  for (let x = 0; x < w; x += 1) {
+    flags.push([
+      dx * x - (dx * w) / 2 + r(),
+      dy * y - (dy * h) / 2 + r(),
+      -550,
+    ]);
+  }
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Canvas>
+      <pointLight position={[10, 10, 10]} color={0xffffff} intensity={0.8} />
+      <Suspense fallback={<Loader />}>
+        {flags.map((position) => (
+          <Flag position={position} />
+        ))}
+      </Suspense>
+      <Stats showPanel={0} />
+      <OrbitControls />
+    </Canvas>
   );
 }
 
