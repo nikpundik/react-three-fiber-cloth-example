@@ -8,8 +8,10 @@ import flagSrc from '../assets/flag.jpg';
 const TIMESTEP = 18 / 1000;
 const DEBUG = false;
 
-function Flag({ position }) {
+function Flag({ flag }) {
   const [cloth, setCloth] = useState(null);
+  const [wind, setWind] = useState(true);
+  const [hover, setHover] = useState(false);
   const [flagTexture] = useLoader(TextureLoader, [flagSrc]);
   const mesh = useRef();
   const geometry = useRef();
@@ -20,6 +22,7 @@ function Flag({ position }) {
 
   useFrame(() => {
     if (!cloth || !geometry.current) return;
+    cloth.windEnabled = wind;
     cloth.update(TIMESTEP, geometry.current);
     geometry.current.vertices.forEach((vertex, i) =>
       vertex.copy(cloth.particles[i].position)
@@ -27,6 +30,7 @@ function Flag({ position }) {
 
     geometry.current.computeFaceNormals();
     geometry.current.computeVertexNormals();
+    geometry.current.computeBoundingSphere();
 
     geometry.current.normalsNeedUpdate = true;
     geometry.current.verticesNeedUpdate = true;
@@ -36,8 +40,14 @@ function Flag({ position }) {
   if (flagTexture) flagTexture.anisotropy = 16;
 
   return (
-    <group position={position}>
-      <mesh position={[0, 0, 0]} ref={mesh} castShadow>
+    <group position={flag.position}>
+      <mesh
+        ref={mesh}
+        onClick={() => setWind(!wind)}
+        onPointerOver={(e) => setHover(true)}
+        onPointerOut={(e) => setHover(false)}
+        castShadow
+      >
         <parametricGeometry
           attach="geometry"
           args={cloth.toGeometryArgs()}
@@ -48,6 +58,7 @@ function Flag({ position }) {
           attach="material"
           side={DoubleSide}
           map={flagTexture}
+          color={hover ? 'orange' : 'white'}
         />
       </mesh>
       {DEBUG &&

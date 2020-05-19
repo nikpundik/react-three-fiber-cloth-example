@@ -14,11 +14,14 @@ const dy = 300;
 const r = () => Math.random() * 30 - 60;
 for (let y = 0; y < h; y += 1) {
   for (let x = 0; x < w; x += 1) {
-    flags.push([
-      dx * x - (dx * w) / 2 + r(),
-      dy * y - (dy * h) / 2 + r(),
-      -550,
-    ]);
+    flags.push({
+      id: `${x}-${y}`,
+      position: [
+        dx * x - (dx * w) / 2 + r(),
+        dy * y - (dy * h) / 2 + r(),
+        -550,
+      ],
+    });
   }
 }
 
@@ -27,8 +30,8 @@ function App() {
     <Canvas>
       <pointLight position={[10, 10, 10]} color={0xffffff} intensity={0.8} />
       <Suspense fallback={<Loader />}>
-        {flags.map((position) => (
-          <Flag position={position} />
+        {flags.map((flag) => (
+          <Flag key={flag.id} flag={flag} />
         ))}
       </Suspense>
       <Stats showPanel={0} />
